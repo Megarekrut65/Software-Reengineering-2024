@@ -1,126 +1,96 @@
 ﻿using System;
+using Fight;
 
-public class Weapons
+namespace Select
 {
-    private int maxLvl = 15;
-    public int indexOfAvatar;
-    private int lvlOfSword;
-    private int lvlOfShield;
-    public Weapons(int indexOfAvatar = 0, int lvlOfSword = 1, int lvlOfShield = 1)
+    [Serializable]
+    public class WeaponsData
     {
-        this.indexOfAvatar = indexOfAvatar;
-        this.lvlOfSword = lvlOfSword;
-        this.lvlOfShield = lvlOfShield;
+        public int indexOfAvatar;
+        public int lvlOfSword;
+        public int lvlOfShield;
     }
-    public string CreateString()
-    {
-        string result =  "{index:" + indexOfAvatar.ToString() + 
-        ";lvlSword:" + lvlOfSword.ToString() + 
-        ";lvlShield:" + lvlOfShield.ToString() + "}";
-        return result;
-    }
-    public Weapons(string line)
-    {
-        char[] trim = {'{' , '}'};
-        line = line.Trim(trim);
-        string[] parts = line.Split(';');
-        indexOfAvatar = Convert.ToInt32(parts[0].Substring(6));
-        lvlOfSword = Convert.ToInt32(parts[1].Substring(9));
-        lvlOfShield = Convert.ToInt32(parts[2].Substring(10));
-    }
-    int CountShieldChance()
-    {
-        int add = 0;
-        switch(indexOfAvatar)
-        {
-            case 0: add = 12 - 5/lvlOfSword; 
-            break;
-            case 1: add = 4;
-            break;
-            case 2: add = 8 - 4/lvlOfSword;
-            break;
-            default:
-            break;
-        }
 
-        return (lvlOfShield * 2 + add );
-    }
-    int CountSwordChance()
+    public class Weapons
     {
-        int add = 0;
-        switch(indexOfAvatar)
+        private const int MaxLvl = 15;
+        public WeaponsData Data { get; private set; }
+        public Weapons(WeaponsData data)
         {
-            case 0: add = 16 - 10/lvlOfSword; 
-            break;
-            case 1: add = 9 - 5/lvlOfSword;
-            break;
-            case 2: add = 0;
-            break;
-            default:
-            break;
+            Data = data;
         }
-        return (lvlOfSword + add + 5);
-    }
-    public int CountChance(int indexOfSteel)
-    {
-        int chance = 0;
-        switch(indexOfSteel)
+       private int CountShieldChance()
         {
-            case 0: chance = CountSwordChance();
-            break;
-            case 1: chance = CountShieldChance();
-            break;
-            default:
-            break;
+            int add = Data.indexOfAvatar switch
+            {
+                0 => 12 - 5 / Data.lvlOfShield,
+                1 => 4,
+                2 => 8 - 4 / Data.lvlOfShield,
+                _ => 0
+            };
+
+            return Data.lvlOfShield * 2 + add;
         }
-        return chance;
-    }
-    public int CountPrice(int indexOfSteel)
-    {
-        int startPrice = 100;
-        switch(indexOfSteel)
+        private int CountSwordChance()
         {
-            case 0: startPrice = (lvlOfSword * startPrice + indexOfAvatar * lvlOfSword * 10);
-            break;
-            case 1: startPrice = (lvlOfShield * startPrice + indexOfAvatar * lvlOfShield * 10);
-            break;
-            default:
-            break;
+            int add = Data.indexOfAvatar switch
+            {
+                0 => 16 - 10 / Data.lvlOfSword,
+                1 => 9 - 5 / Data.lvlOfSword,
+                2 => 0,
+                _ => 0
+            };
+            return Data.lvlOfSword + add + 5;
         }
-        return startPrice + maxLvl;
-    }
-    public bool IsMaxLvl(int indexOfSteel)
-    {
-        switch(indexOfSteel)
+        public int CountChance(Steel steel)
         {
-            case 0: if(lvlOfSword == maxLvl) return true;
-            break;
-            case 1: if(lvlOfShield == maxLvl) return true;
-            break;
-            default:
-            break;
+            return steel switch
+            {
+                Steel.Sword => CountSwordChance(),
+                Steel.Shield => CountShieldChance(),
+                _ => 0
+            };
         }
-        return false;
-    }
-    public void AddLvl(int indexOfSteel)
-    {
-        switch(indexOfSteel)
+        public int CountPrice(Steel steel)
         {
-            case 0: if(lvlOfSword < maxLvl) lvlOfSword++;
-            break;
-            case 1: if(lvlOfShield < maxLvl) lvlOfShield++;
-            break;
-            default:
-            break;
+            int startPrice = 100;
+            startPrice = steel switch
+            {
+                Steel.Sword => Data.lvlOfSword * startPrice + Data.indexOfAvatar * Data.lvlOfSword * 10,
+                Steel.Shield => Data.lvlOfShield * startPrice + Data.indexOfAvatar * Data.lvlOfShield * 10,
+                _ => startPrice
+            };
+            return startPrice + MaxLvl;
         }
-    }
-    public int GetLvl(int indexOfSteel)
-    {
-        switch(indexOfSteel)
+        public bool IsMaxLvl(Steel steel)
         {
-            case 0: return lvlOfSword;
-            case 1: return lvlOfShield;
-            default: return 0;
+            switch(steel)
+            {
+                case Steel.Sword: if(Data.lvlOfSword == MaxLvl) return true;
+                    break;
+                case Steel.Shield: if(Data.lvlOfShield == MaxLvl) return true;
+                    break;
+            }
+            return false;
+        }
+        public void AddLvl(Steel steel)
+        {
+            switch(steel)
+            {
+                case Steel.Sword: if(Data.lvlOfSword < MaxLvl) Data.lvlOfSword++;
+                    break;
+                case Steel.Shield: if(Data.lvlOfShield < MaxLvl) Data.lvlOfShield++;
+                    break;
+            }
+        }
+        public int GetLvl(Steel steel)
+        {
+            return steel switch
+            {
+                Steel.Sword => Data.lvlOfSword,
+                Steel.Shield => Data.lvlOfShield,
+                _ => 0
+            };
         }
     }
 }
