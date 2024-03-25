@@ -1,56 +1,64 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Fight.Player;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class SetPlayerData : MonoBehaviour
+namespace Account
 {
-    public Text nickName;
-    public Text points;
-    public Text coins;
-    private string infoPath = "player-info.txt";
-    private string dataPath = "data.txt";
-    private string newDataPath = "newData.txt";
-    public PlayerInfo player;
-    public GameObject deleting;
-    public GameObject editing;
-    public GameObject account;
-    void Start()
+    public class SetPlayerData : MonoBehaviour
     {
-        CorrectPathes.MakeCorrect(ref infoPath, ref dataPath, ref newDataPath);
-        player = new PlayerInfo(infoPath);
-        if(!player.correctRead) SceneManager.LoadScene("LogIn", LoadSceneMode.Single);
-        SetData();
-    }
-    void SetData()
-    {
-        nickName.text = player.nickName;
-        points.text = player.points.ToString();
-        coins.text = "$" + player.coins.ToString();
-    }
-    public void BackButton()
-    {
-        SceneManager.LoadScene("Main", LoadSceneMode.Single);
-    }
-    public void EditPlayer()
-    {
-        player.EditPlayerInPlayersFile(dataPath, newDataPath, infoPath);
-        account.SetActive(true);
-    }
-    public void DeleteAccount()
-    {
-        player.DeletePlayer(dataPath, newDataPath, infoPath);
-        SceneManager.LoadScene("LogIn", LoadSceneMode.Single);
-    }
-    public void DeleteButton()
-    {
-        deleting.SetActive(true);
-        account.SetActive(false);
-    }
-    public void EditButton()
-    {
-        editing.SetActive(true);
-        account.SetActive(false);
+        public Text nickName;
+        public Text points;
+        public Text coins;
+        private string _infoPath = "player-info.txt";
+        private string _dataPath = "data.txt";
+        private string _newDataPath = "newData.txt";
+        public PlayerController Player;
+        public GameObject deleting;
+        public GameObject editing;
+        public GameObject account;
+        
+        private void Start()
+        {
+            CorrectPathes.MakeCorrect(ref _infoPath, ref _dataPath, ref _newDataPath);
+            PlayerData data = PlayerStorage.GetCurrentPlayer();
+            if (data == null)
+            {
+                SceneManager.LoadScene("LogIn", LoadSceneMode.Single);
+                return;
+            }
+            Player = new PlayerController(data);
+            SetData();
+        }
+        private void SetData()
+        {
+            nickName.text = Player.Data.nickname;
+            points.text = Player.Data.points.ToString();
+            coins.text = "$" + Player.Data.coins;
+        }
+        public void BackButton()
+        {
+            SceneManager.LoadScene("Main", LoadSceneMode.Single);
+        }
+        public void EditPlayer()
+        {
+            PlayerStorage.UpdateCurrentPlayer(Player.Data);
+            account.SetActive(true);
+        }
+        public void DeleteAccount()
+        {
+            PlayerStorage.DeletePlayer(Player.Data);
+            SceneManager.LoadScene("LogIn", LoadSceneMode.Single);
+        }
+        public void DeleteButton()
+        {
+            deleting.SetActive(true);
+            account.SetActive(false);
+        }
+        public void EditButton()
+        {
+            editing.SetActive(true);
+            account.SetActive(false);
+        }
     }
 }

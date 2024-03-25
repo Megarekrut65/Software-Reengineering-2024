@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Account;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,7 @@ public class DeleteAccount : MonoBehaviour
 
     public void Delete()
     {
-        if(mainCamera.GetComponent<SetPlayerData>().player.CorrectPassword(password.text))
+        if(mainCamera.GetComponent<SetPlayerData>().Player.CorrectPassword(password.text))
         {
             mainCamera.GetComponent<SetPlayerData>().DeleteAccount();
         }

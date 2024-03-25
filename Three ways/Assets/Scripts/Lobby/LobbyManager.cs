@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
+using Fight.Player;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
@@ -12,8 +13,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public Text roomCodeText;
     public InputField maxHP;
     public InputField roomCode;
-    private PlayerInfo player;
-    public string infoPath = "player-info.txt";
+    private PlayerController player;
     public string gamePath = "game-info.txt";
     private int numberOfRoom;
     private bool isConnect;
@@ -30,7 +30,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     void Start()
     {       
         SetDisconnect();
-        CorrectPathes.MakeCorrect(ref infoPath, ref roomPath, ref gamePath);
         PlayerSetting();
         SettingPhoton();
         findRandom = false;
@@ -38,7 +37,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     }
     void PlayerSetting()
     {
-        player = new PlayerInfo(infoPath);
+        player = new PlayerController(PlayerStorage.GetCurrentPlayer());
     }
     public void SetDisconnect()
     {
@@ -48,7 +47,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     }
     void SettingPhoton()
     {
-        PhotonNetwork.NickName = player.nickName;
+        PhotonNetwork.NickName = player.Data.nickname;
         //PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.GameVersion = "2";
     }
@@ -73,7 +72,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             errorsBoard.GetComponent<Errors>().SetError("Error" + ": Max hp can't be less than one");
             return false;
         }
-        GameInfo gameInfo = new GameInfo(player.currentIndexOfAvatar, player.points, code, maxHPNumber, isHost);
+        GameInfo gameInfo = new GameInfo(player.CurrentIndexOfAvatar, player.Data.points, code, maxHPNumber, isHost);
         gameInfo.CreateInfoFile(gamePath); 
 
         return true;

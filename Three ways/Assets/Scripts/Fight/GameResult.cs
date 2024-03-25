@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using UnityEngine;
+using Random = System.Random;
 
 public class GameResult
 {
@@ -22,23 +24,15 @@ public class GameResult
 
         return line;
     }
-    public void WriteResult(string path)
+    public void WriteResult()
     {
-        FileStream file = new FileStream(path, FileMode.OpenOrCreate);
-        StreamWriter writer = new StreamWriter(file);
-        writer.WriteLine("New points=" + newPoints.ToString());
-        writer.WriteLine("Coins=" + coins.ToString());
-        writer.Close();
+        PlayerPrefs.SetInt("ResultCoins", coins);
+        PlayerPrefs.SetInt("ResultPoints", newPoints);
     }
-    public void ReadResult(string path)
+    public void ReadResult()
     {
-        FileStream file = new FileStream(path, FileMode.OpenOrCreate);
-        StreamReader reader = new StreamReader(file);
-        if(reader.EndOfStream) newPoints = 0;
-        else newPoints = Convert.ToInt32(reader.ReadLine().Substring(11));
-        if(reader.EndOfStream) coins = 0;
-        else coins = Convert.ToInt32(reader.ReadLine().Substring(6));
-        reader.Close();
+        coins = PlayerPrefs.GetInt("ResultCoins", 0);
+        newPoints = PlayerPrefs.GetInt("ResultPoints", 0);
     }
     public GameResult(int newPoints = 0, int coins= 0) 
     {

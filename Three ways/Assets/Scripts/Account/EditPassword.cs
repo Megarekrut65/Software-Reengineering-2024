@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Account;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,7 @@ public class EditPassword : MonoBehaviour
 
     void EditPass()
     {
-        if(mainCamera.GetComponent<SetPlayerData>().player.EditPassword(password.text, newPassword.text))
+        if(mainCamera.GetComponent<SetPlayerData>().Player.EditPassword(password.text, newPassword.text))
         {
             mainCamera.GetComponent<SetPlayerData>().EditPlayer();
             Clear();

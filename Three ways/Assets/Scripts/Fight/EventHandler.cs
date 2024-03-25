@@ -1,5 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Fight;
+using Fight.Player;
+using Select;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -24,7 +27,7 @@ public class EventHandler : MonoBehaviour
     private Text rightHpText;
     private string resultPath = "result-info.txt";
     private string infoPath = "player-info.txt";
-    private PlayerInfo playerInfo;
+    private PlayerController playerInfo;
     public int minePoints = 0;
     public int otherPoints = 0;
     public GameObject gameManager;
@@ -55,10 +58,11 @@ public class EventHandler : MonoBehaviour
     void Start()
     {
         CorrectPathes.MakeCorrect(ref resultPath, ref infoPath);
-        playerInfo = new PlayerInfo(infoPath);
+        PlayerData data = PlayerStorage.GetCurrentPlayer();
+        playerInfo = new PlayerController(data);
         Weapons weapons = playerInfo.GetCurrentWeapon();
-        attackControler.GetComponent<SelectedWay>().chance = weapons.CountChance(0);
-        protectControler.GetComponent<SelectedWay>().chance = weapons.CountChance(1);
+        attackControler.GetComponent<SelectedWay>().chance = weapons.CountChance(Steel.Sword);
+        protectControler.GetComponent<SelectedWay>().chance = weapons.CountChance(Steel.Shield);
         isSeted = false;
     }
     public void Begin()
@@ -114,16 +118,16 @@ public class EventHandler : MonoBehaviour
     void Win()
     {
         Weapons weapons = playerInfo.GetCurrentWeapon();
-        int lvl = (weapons.GetLvl(0) + weapons.GetLvl(1))/2;
+        int lvl = (weapons.GetLvl(0) + weapons.GetLvl(Steel.Shield))/2;
         GameResult result = GameResult.CountWin(minePoints, otherPoints, lvl);
-        result.WriteResult(resultPath);
+        result.WriteResult();
     }
     void Lose()
     {
         Weapons weapons = playerInfo.GetCurrentWeapon();
-        int lvl = (weapons.GetLvl(0) + weapons.GetLvl(1))/2;
+        int lvl = (weapons.GetLvl(0) + weapons.GetLvl(Steel.Shield))/2;
         GameResult result = GameResult.CountLose(minePoints, otherPoints, lvl);
-        result.WriteResult(resultPath);
+        result.WriteResult();
     }
     void CheckWiner()
     {

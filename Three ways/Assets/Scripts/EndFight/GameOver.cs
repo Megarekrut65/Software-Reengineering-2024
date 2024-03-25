@@ -1,39 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Fight.Player;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System;
-using System.IO;
+using UnityEngine.UI;
 
-public class GameOver : MonoBehaviour
+namespace EndFight
 {
-    public Text theText;
-    private string resultPath = "result-info.txt";
-    private string infoPath = "player-info.txt";
-    private string dataPath = "data.txt";
-    private string newDataPath = "newData.txt";
-    private string gamePath = "game-info.txt";
-    private GameResult result;
-    private PlayerInfo player;
-
-    void Start()
+    public class GameOver : MonoBehaviour
     {
-        string[] list = {resultPath, infoPath, dataPath, newDataPath, gamePath};
-        CorrectPathes.MakeCorrect(ref list);
-        resultPath = list[0];
-        gamePath = list[4];
-        result = new GameResult();
-        result.ReadResult(resultPath);
-        theText.text = result.GetString();
-        player = new PlayerInfo(list[1]);
-        player.AddResult(result);
-        player.EditPlayerInPlayersFile(list[2], list[3], list[1]);
-    }
-    public void ClickNext()
-    {  
-        File.Delete(resultPath);
-        File.Delete(gamePath);
-        SceneManager.LoadScene("Main");
+        public Text theText;
+        private GameResult _result;
+        private PlayerController _player;
+
+        void Start()
+        {
+       
+            _result = new GameResult();
+            _result.ReadResult();
+        
+            theText.text = _result.GetString();
+            _player = new PlayerController(PlayerStorage.GetCurrentPlayer());
+            _player.AddResult(_result);
+            PlayerStorage.UpdateCurrentPlayer(_player.Data);
+        }
+        public void ClickNext()
+        {
+            SceneManager.LoadScene("Main");
+        }
     }
 }
