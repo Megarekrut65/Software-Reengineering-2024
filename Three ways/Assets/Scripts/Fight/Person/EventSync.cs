@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using Fight.EventHandler;
+using Photon.Pun;
 
 namespace Fight.Person
 {

@@ -43,7 +43,7 @@ namespace Fight.GameManager
                 SceneManager.LoadScene("EndFight", LoadSceneMode.Single);
                 return;
             }
-            if(_isStarted) _mainCamera.GetComponent<EventHandler>().ForcedExit(true);
+            if(_isStarted) _mainCamera.GetComponent<EventHandler.EventHandler>().ForcedExit(true);
         }
 
         private void EditBoard()
@@ -53,7 +53,7 @@ namespace Fight.GameManager
         public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
         {
             if(_endFight) return;
-            if(_isStarted) _mainCamera.GetComponent<EventHandler>().ForcedExit(false);
+            if(_isStarted) _mainCamera.GetComponent<EventHandler.EventHandler>().ForcedExit(false);
             else EditBoard();
             Debug.LogFormat("Player {0} left room", otherPlayer.NickName);
         }

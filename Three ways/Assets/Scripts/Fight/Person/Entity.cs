@@ -7,7 +7,7 @@ namespace Fight.Person
     [Serializable]
     public class Entity
     {
-        public EventHandler handler;
+        public EventHandler.EventHandler handler;
         public Text nickNameText;
         public Slider hpSlider;
         public Text hpText;
@@ -25,7 +25,7 @@ namespace Fight.Person
             nickNameText = GameObject.Find("LeftNickName").GetComponent<Text>();
             hpSlider = GameObject.Find("LeftHP").GetComponent<Slider>();
             hpText = GameObject.Find("LeftHPText").GetComponent<Text>();  
-            handler.leftPerson = gameObject;
+            handler.left.person = gameObject;
         }
         public void SetOtherPlayer(GameObject gameObject)
         {
@@ -35,7 +35,7 @@ namespace Fight.Person
             nickNameText = GameObject.Find("RightNickName").GetComponent<Text>();
             hpSlider = GameObject.Find("RightHP").GetComponent<Slider>();
             hpText = GameObject.Find("RightHPText").GetComponent<Text>();
-            handler.rightPerson = gameObject;
+            handler.right.person = gameObject;
         }
     }
 }

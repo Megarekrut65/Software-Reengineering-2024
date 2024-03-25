@@ -1,4 +1,5 @@
 ﻿using ExitGames.Client.Photon;
+using Fight.EventHandler;
 using Photon.Pun;
 using UnityEngine;
 
@@ -55,7 +56,7 @@ namespace Fight.GameManager
         {
             gameRoom.GetComponent<Animator>().SetBool("move", true);
             SetPlayer();
-            _mainCamera.GetComponent<EventHandler>().Begin();
+            _mainCamera.GetComponent<EventHandler.EventHandler>().Begin();
         }
         public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
         {

@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Fight.EventHandler;
 using Fight.GameManager;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SelectedWay : MonoBehaviour
 {
-    public int index;
+    public Direction index;
     public int chance = 0;
     public bool isSelected;
     public bool isChance;
@@ -32,7 +33,7 @@ public class SelectedWay : MonoBehaviour
             timeSlider.value--;
         }
     }
-    public void Select(int index)
+    public void Select(Direction index)
     {
         timeSlider.value = time;
         this.index = index;

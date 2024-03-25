@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Fight.EventHandler;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class SelectedButton : MonoBehaviour, 
 IPointerDownHandler, IPointerUpHandler
 {
-    public int index;
+    public Direction index;
     public GameObject controler;
     public void OnPointerDown(PointerEventData eventData)
     {   

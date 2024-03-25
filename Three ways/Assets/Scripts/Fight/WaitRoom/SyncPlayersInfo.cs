@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Fight.EventHandler;
 using UnityEngine;
 using Photon.Pun;
 
@@ -41,18 +42,18 @@ public class SyncPlayersInfo : MonoBehaviour, IPunObservable
     }
     void Update()
     {
-        if(gameInfo.isHost) mainCamera.GetComponent<EventHandler>().maxHP = gameInfo.maxHP; 
+        if(gameInfo.isHost) mainCamera.GetComponent<EventHandler>().maxHp = gameInfo.maxHP; 
         if(gameInfo.isHost) board.GetComponent<InfoBoard>().SetRoom(gameInfo.code);
         board.GetComponent<InfoBoard>().SetData(photonView.Owner.NickName, gameInfo);
         if(photonView.IsMine)
         {
             gameInfo.isReady = board.GetComponent<InfoBoard>().info.isReady;
-            mainCamera.GetComponent<EventHandler>().minePoints = gameInfo.points;
+            mainCamera.GetComponent<EventHandler>().right.points = gameInfo.points;
         }
         else
         {
             board.GetComponent<InfoBoard>().info.isReady = gameInfo.isReady;
-            mainCamera.GetComponent<EventHandler>().otherPoints = gameInfo.points;
+            mainCamera.GetComponent<EventHandler>().left.points = gameInfo.points;
         }
     }
 }

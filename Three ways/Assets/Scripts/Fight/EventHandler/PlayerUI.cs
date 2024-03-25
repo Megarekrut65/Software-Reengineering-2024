@@ -7,7 +7,7 @@ namespace Fight.EventHandler
 {
     public enum Direction: int
     {
-        Top, Center, Bottom
+        Top, Center, Bottom, None
     }
     public struct GameEvent
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using Fight.EventHandler;
 
 namespace Fight.GameManager
 {
@@ -8,12 +9,12 @@ namespace Fight.GameManager
         {
             GameEvent result = new GameEvent
             {
-                isSelected = BitConverter.ToBoolean(data, 0),
-                attackIndex = BitConverter.ToInt32(data, 1),
-                protectIndex = BitConverter.ToInt32(data, 5),
-                hp = BitConverter.ToInt32(data, 9),
-                isAttackChance = BitConverter.ToBoolean(data, 13),
-                isProtectChance = BitConverter.ToBoolean(data, 14)
+                IsSelected = BitConverter.ToBoolean(data, 0),
+                AttackIndex = (Direction)BitConverter.ToInt32(data, 1),
+                ProtectIndex = (Direction)BitConverter.ToInt32(data, 5),
+                Hp = BitConverter.ToInt32(data, 9),
+                IsAttackChance = BitConverter.ToBoolean(data, 13),
+                IsProtectChance = BitConverter.ToBoolean(data, 14)
             };
             return result;
         }
@@ -21,12 +22,12 @@ namespace Fight.GameManager
         {
             GameEvent gameEvent = (GameEvent)obj;
             byte[] result = new byte[ 1 + 4 + 4 + 4 + 1 + 1];
-            BitConverter.GetBytes(gameEvent.isSelected).CopyTo(result, 0);
-            BitConverter.GetBytes(gameEvent.attackIndex).CopyTo(result, 1);
-            BitConverter.GetBytes(gameEvent.protectIndex).CopyTo(result, 5);
-            BitConverter.GetBytes(gameEvent.hp).CopyTo(result, 9);
-            BitConverter.GetBytes(gameEvent.isAttackChance).CopyTo(result, 13);
-            BitConverter.GetBytes(gameEvent.isProtectChance).CopyTo(result, 14);
+            BitConverter.GetBytes(gameEvent.IsSelected).CopyTo(result, 0);
+            BitConverter.GetBytes((int)gameEvent.AttackIndex).CopyTo(result, 1);
+            BitConverter.GetBytes((int)gameEvent.ProtectIndex).CopyTo(result, 5);
+            BitConverter.GetBytes(gameEvent.Hp).CopyTo(result, 9);
+            BitConverter.GetBytes(gameEvent.IsAttackChance).CopyTo(result, 13);
+            BitConverter.GetBytes(gameEvent.IsProtectChance).CopyTo(result, 14);
 
             return result;
         }

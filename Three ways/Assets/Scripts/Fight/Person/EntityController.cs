@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Fight.EventHandler;
 using Photon.Pun;
 using UnityEngine;
 
@@ -30,7 +31,7 @@ namespace Fight.Person
         private void SetUI()
         {
             transform.position = entity.minePosition;
-            entity.hpSlider.maxValue = entity.handler.maxHP;
+            entity.hpSlider.maxValue = entity.handler.maxHp;
             entity.hpText.text = entity.hpSlider.maxValue.ToString();
             entity.nickNameText.text = _photonView.Owner.NickName;   
         }
@@ -68,14 +69,14 @@ namespace Fight.Person
         }
         public void EditMineHp(int value)
         {
-            entity.handler.left.hp += value; 
-            entity.hpSlider.value = entity.handler.left.hp;
+            entity.handler.left.gameEvent.Hp += value; 
+            entity.hpSlider.value = entity.handler.left.gameEvent.Hp;
             entity.hpText.text = entity.handler.left.hp.ToString();
         }
         public void EditHp(int value)
         {
-            entity.hpSlider.value = _sync.GameEvent.hp + value;
-            entity.hpText.text = (_sync.GameEvent.hp + value).ToString();
+            entity.hpSlider.value = _sync.GameEvent.Hp + value;
+            entity.hpText.text = (_sync.GameEvent.Hp + value).ToString();
         }
         public void AttackSound()
         {
@@ -111,12 +112,13 @@ namespace Fight.Person
                 return;
             }
 
-            EntityController entityController = (_photonView.IsMine ? entity.handler.rightPerson : entity.handler.leftPerson)
+            EntityController entityController = (_photonView.IsMine 
+                    ? entity.handler.right.person : entity.handler.left.person)
                 .GetComponent<EntityController>();
         
             switch (index)
             {
-                case 0: entityController.GetHit(4, false, index);break;
+                case 0: entityController.GetHit(Direction.None, false, index);break;
                 case 1: entityController.SetStun(true); break;
                 case 2:
                 {
@@ -130,26 +132,27 @@ namespace Fight.Person
         {
             animator.SetBool("block", true );
             if(isChance && indexOfEnemy == 0) Attack(false, 0);
-            else if(_sync.GameEvent.isProtectChance) ProtectSpecialSkill();
+            else if(_sync.GameEvent.IsProtectChance) ProtectSpecialSkill();
         }
-        private void GetHit(int enemyAttack, bool isChance, int indexOfEnemy)
+        private void GetHit(Direction enemyAttack, bool isChance, int indexOfEnemy)
         {
-            if(enemyAttack != _sync.GameEvent.protectIndex) Attack(isChance, indexOfEnemy);  
+            if(enemyAttack != _sync.GameEvent.ProtectIndex) Attack(isChance, indexOfEnemy);  
             else Protect(isChance, indexOfEnemy);
         }
         public void Fight()
         {
             AttackSound();
-            bool chance = _sync.GameEvent.isAttackChance;
-            if(isStunned && _sync.GameEvent.isAttackChance)
+            bool chance = _sync.GameEvent.IsAttackChance;
+            if(isStunned && _sync.GameEvent.IsAttackChance)
             {
                 isStunned = false;
                 chance  = false;
             }
-            EntityController entityController = (_photonView.IsMine ? entity.handler.rightPerson : entity.handler.leftPerson)
+            EntityController entityController = (_photonView.IsMine 
+                    ? entity.handler.right.person : entity.handler.left.person)
                 .GetComponent<EntityController>();
         
-            entityController.GetHit(_sync.GameEvent.attackIndex, chance, index);
+            entityController.GetHit(_sync.GameEvent.AttackIndex, chance, index);
         }
         public void StopHit()
         {
@@ -180,26 +183,26 @@ namespace Fight.Person
             _isRun = false;
             if(!_wasHit)
             {
-                animator.SetInteger("hit", _sync.GameEvent.attackIndex);
+                animator.SetInteger("hit", (int)_sync.GameEvent.AttackIndex);
             } 
             else entity.handler.NextPerson();
         }
         private void SetSword()
         {
-            entity.sword.GetComponent<SpriteRenderer>().color = _sync.GameEvent.isAttackChance ? Color.red : Color.white;
+            entity.sword.GetComponent<SpriteRenderer>().color = _sync.GameEvent.IsAttackChance ? Color.red : Color.white;
         }
 
         private void SetShield()
         {
-            entity.shield.GetComponent<SpriteRenderer>().color = _sync.GameEvent.isProtectChance ? Color.green : Color.white;
+            entity.shield.GetComponent<SpriteRenderer>().color = _sync.GameEvent.IsProtectChance ? Color.green : Color.white;
         }
 
         private IEnumerator EventExchange()
         {
             while(true)
             {
-                if(_photonView.IsMine) _sync.GameEvent = entity.handler.left;
-                else entity.handler.right = _sync.GameEvent;
+                if(_photonView.IsMine) _sync.GameEvent = entity.handler.left.gameEvent;
+                else entity.handler.right.gameEvent = _sync.GameEvent;
             
                 yield return new WaitForSeconds(0.01f);
                 SetSword();
