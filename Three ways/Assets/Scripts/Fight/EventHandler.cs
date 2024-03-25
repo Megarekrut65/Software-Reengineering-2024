@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Fight;
+using Fight.Person;
 using Fight.Player;
 using Select;
 using UnityEngine;
