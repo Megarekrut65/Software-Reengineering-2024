@@ -82,7 +82,7 @@ public class EventHandler : MonoBehaviour
         else
         {
             wasFight = true;
-            rightPerson.GetComponent<Person>().Hitting();
+            rightPerson.GetComponent<EntityController>().Hitting();
         }
     }
     void CheckFight()
@@ -91,7 +91,7 @@ public class EventHandler : MonoBehaviour
         {
             wasFight = false;
             needWait = true; 
-            leftPerson.GetComponent<Person>().Hitting();
+            leftPerson.GetComponent<EntityController>().Hitting();
         }
     }
     void SetLeft()
@@ -161,8 +161,8 @@ public class EventHandler : MonoBehaviour
         rightHP.value = right.hp;
         leftHpText.text = left.hp.ToString();
         rightHpText.text = right.hp.ToString();
-        if(leftHP.value <= 0) leftPerson.GetComponent<Person>().DieAvatar();
-        if(rightHP.value <= 0) rightPerson.GetComponent<Person>().DieAvatar();
+        if(leftHP.value <= 0) leftPerson.GetComponent<EntityController>().DieAvatar();
+        if(rightHP.value <= 0) rightPerson.GetComponent<EntityController>().DieAvatar();
         if(leftHP.value <= 0 || rightHP.value <= 0)
         {
             StartCoroutine("FightEnd");

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Fight.Person
 {
-    public class Person : MonoBehaviour
+    public class EntityController : MonoBehaviour
     {
         [SerializeField]
         private Entity entity;
@@ -111,13 +111,13 @@ namespace Fight.Person
                 return;
             }
 
-            Person person = (_photonView.IsMine ? entity.handler.rightPerson : entity.handler.leftPerson)
-                .GetComponent<Person>();
+            EntityController entityController = (_photonView.IsMine ? entity.handler.rightPerson : entity.handler.leftPerson)
+                .GetComponent<EntityController>();
         
             switch (index)
             {
-                case 0: person.GetHit(4, false, index);break;
-                case 1: person.SetStun(true); break;
+                case 0: entityController.GetHit(4, false, index);break;
+                case 1: entityController.SetStun(true); break;
                 case 2:
                 {
                     if(_photonView.IsMine) EditMineHp(1);
@@ -146,10 +146,10 @@ namespace Fight.Person
                 isStunned = false;
                 chance  = false;
             }
-            Person person = (_photonView.IsMine ? entity.handler.rightPerson : entity.handler.leftPerson)
-                .GetComponent<Person>();
+            EntityController entityController = (_photonView.IsMine ? entity.handler.rightPerson : entity.handler.leftPerson)
+                .GetComponent<EntityController>();
         
-            person.GetHit(_sync.GameEvent.attackIndex, chance, index);
+            entityController.GetHit(_sync.GameEvent.attackIndex, chance, index);
         }
         public void StopHit()
         {
