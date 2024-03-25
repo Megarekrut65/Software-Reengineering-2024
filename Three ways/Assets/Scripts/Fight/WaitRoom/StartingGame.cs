@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Fight.GameManager;
 using UnityEngine;
 using UnityEngine.UI;
 

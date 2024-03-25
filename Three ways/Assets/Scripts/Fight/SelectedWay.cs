@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Fight.GameManager;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,7 +27,7 @@ public class SelectedWay : MonoBehaviour
     {
         while(true)
         {
-            if(timeSlider.value <= 0) gameManager.GetComponent<GameManager>().AnswerYes();
+            if(timeSlider.value <= 0) gameManager.GetComponent<LeaveManager>().AnswerYes();
             yield return new WaitForSeconds(1f);
             timeSlider.value--;
         }

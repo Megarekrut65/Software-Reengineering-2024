@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Fight;
+using Fight.GameManager;
 using Fight.Person;
 using Fight.Player;
 using Select;
@@ -145,14 +146,14 @@ public class EventHandler : MonoBehaviour
         if(mine) Lose();
         else Win();
         if(mine) SceneManager.LoadScene("EndFight", LoadSceneMode.Single);
-        else gameManager.GetComponent<GameManager>().EndFight();
+        else gameManager.GetComponent<LeaveManager>().EndFight();
     }
     IEnumerator FightEnd()
     {
         StopCoroutine("ShowControlers");
         yield return new WaitForSeconds(3f);
         CheckWiner();
-        gameManager.GetComponent<GameManager>().EndFight();
+        gameManager.GetComponent<LeaveManager>().EndFight();
         StopCoroutine("FightEnd");
     }
     void CheckHealth()
