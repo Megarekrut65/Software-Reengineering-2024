@@ -4,109 +4,76 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.IO;
+using Fight.Player;
 using UnityEngine.SceneManagement;
 
 public class LogInAccount : MonoBehaviour
 {
     public InputField inputNickName;
     public InputField inputPassword;
-    private string dataPath = "data.txt";
-    private string infoPath = "player-info.txt";
     public string nameOfScene = "Main";
     public GameObject errors;
-    PlayerInfo player;
     public GameObject[] avatars;
 
     public void IncorrectData(string obj, string message)
     {
         inputNickName.text = "";
         inputPassword.text = "";
-        for(int i = 0; i < avatars.Length; i++)
-            avatars[i].GetComponent<AvatarsAnimations>().Die();
+        foreach (GameObject avatar in avatars)
+            avatar.GetComponent<AvatarsAnimations>().Die();
+
         errors.SetActive(true);
         errors.GetComponent<LogInErrors>().SetError(obj + " " + message);
     }
     public void StopDieAvatars()
     {
-        for(int i = 0; i < avatars.Length; i++)
-            avatars[i].GetComponent<AvatarsAnimations>().StopDie();
+        foreach (GameObject avatar in avatars)
+            avatar.GetComponent<AvatarsAnimations>().StopDie();
     }
-    void Start()
+
+    private void Start()
     {
-        CorrectPathes.MakeCorrect(ref dataPath, ref infoPath);
-        StartCoroutine("Hitting");
+        StartCoroutine(Hitting());
     }
-    IEnumerator Hitting()
+
+    private IEnumerator Hitting()
     {
         while(true)
         {
             yield return new WaitForSeconds(6f); 
             int random = UnityEngine.Random.Range(1, 9);
-            if(random <= 3) avatars[0].GetComponent<AvatarsAnimations>().Hit();
-            if(random > 3 && random <= 6) avatars[1].GetComponent<AvatarsAnimations>().Hit();
-            if(random > 6)
+            switch (random)
             {
-                for(int i = 0; i < avatars.Length; i++)
-                avatars[i].GetComponent<AvatarsAnimations>().Hit();
-            }
-        }
-    }
-    bool FindPlayer(string nickName, string password)
-    {
-        FileStream file = new FileStream(dataPath, FileMode.OpenOrCreate);
-        StreamReader reader = new StreamReader(file);
-        while (!reader.EndOfStream)
-        {
-            string fileNickname = reader.ReadLine();
-            if (fileNickname == nickName)
-            {
-                string filePassword = reader.ReadLine();
-                if (filePassword == password)
+                case <= 3:
+                    avatars[0].GetComponent<AvatarsAnimations>().Hit();
+                    break;
+                case > 3 and <= 6:
+                    avatars[1].GetComponent<AvatarsAnimations>().Hit();
+                    break;
+                case > 6:
                 {
-                    PlayerInfo player = new PlayerInfo(nickName, password, reader.ReadLine(), reader.ReadLine(), reader.ReadLine(), reader.ReadLine(), reader.ReadLine());
-                    reader.Close();
-                    player.CreateInfoFile(infoPath);                    
-                    return true;
-                }
-                else
-                {
-                    reader.Close();
-                    //IncorrectData("Password","is incorrect!");
-                    return false;
+                    foreach (GameObject avatar in avatars)
+                        avatar.GetComponent<AvatarsAnimations>().Hit();
+
+                    break;
                 }
             }
         }
-        reader.Close();
-        //IncorrectData("Nickname","not found!");
-        return false;       
     }
-    private void CreateAccount()
+    
+    public void OkButton()
     {
-        string nickname = "NickName=" + inputNickName.text;
-        string password = "Password=" + "1111";
-        if(FindPlayer(nickname, password))
+        string nickname = inputNickName.text;
+        string password = inputPassword.text;
+        PlayerData player = PlayerStorage.LoginPlayer(nickname, password);
+        if(player != null)
         {            
+            PlayerStorage.SaveCurrentPlayer(player);
             SceneManager.LoadScene(nameOfScene, LoadSceneMode.Single);        
             return;  
-        }      
-        PlayerInfo newPlayer = new PlayerInfo(
-            inputNickName.text.Length > 0?inputNickName.text:"Player"+ UnityEngine.Random.Range(1000,9999).ToString(),
-            "1111", "@gmail.com");
-            
-            newPlayer.CreateInfoFile(infoPath);
-            newPlayer.AppendToPlayersFile(dataPath);
-    }
-    public void OKButton()
-    {
-        CreateAccount();
-        SceneManager.LoadScene(nameOfScene, LoadSceneMode.Single);          
-        return;
-        string nickname = "NickName=" + inputNickName.text;
-        string password = "Password=" + inputPassword.text;
-        if(FindPlayer(nickname, password))
-        {            
-            SceneManager.LoadScene(nameOfScene, LoadSceneMode.Single);          
-        }      
+        }
+
+        IncorrectData("Incorrect", "Nickname or password incorrect!");
     }
 }
 

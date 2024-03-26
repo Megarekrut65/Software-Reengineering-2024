@@ -8,6 +8,18 @@ namespace Fight.Player
     {
         private const string CurrentKey = "player", PlayersKey = "players";
 
+        private static PlayerData[] Players {
+            get {
+                string json = PlayerPrefs.GetString(PlayersKey, "[]");
+                PlayerData[] players = JsonUtility.FromJson<PlayerData[]>(json);
+                return players;
+            }
+            set
+            {
+                string json = JsonUtility.ToJson(value);
+                PlayerPrefs.SetString(PlayersKey, json);
+            }
+        }
 
         public static void SaveCurrentPlayer(PlayerData data)
         {
@@ -17,14 +29,12 @@ namespace Fight.Player
 
         public static void AddNewPlayer(PlayerData data)
         {
-            string json = PlayerPrefs.GetString(PlayersKey, "[]");
-            PlayerData[] players = JsonUtility.FromJson<PlayerData[]>(json);
+            PlayerData[] players = Players;
 
             List<PlayerData> list = new List<PlayerData>(players) { data };
             players = list.ToArray();
 
-            json = JsonUtility.ToJson(players);
-            PlayerPrefs.SetString(PlayersKey, json);
+            Players = players;
         }
 
         public static void ClearCurrent()
@@ -42,8 +52,7 @@ namespace Fight.Player
 
         public static void UpdateCurrentPlayer(PlayerData data)
         {
-            string json = PlayerPrefs.GetString(PlayersKey, "[]");
-            PlayerData[] players = JsonUtility.FromJson<PlayerData[]>(json);
+            PlayerData[] players = Players;
             for (int i = 0; i < players.Length; i++)
             {
                 if (players[i].id == data.id)
@@ -53,26 +62,33 @@ namespace Fight.Player
                 }
             }
 
-            json = JsonUtility.ToJson(players);
-            PlayerPrefs.SetString(PlayersKey, json);
+            Players = players;
             
             PlayerPrefs.SetString(CurrentKey, JsonUtility.ToJson(data));
         }
 
         public static void DeletePlayer(PlayerData data)
         {
-            string json = PlayerPrefs.GetString(PlayersKey, "[]");
-            PlayerData[] players = JsonUtility.FromJson<PlayerData[]>(json);
-            List<PlayerData> list = new List<PlayerData>(players);
+            List<PlayerData> list = new List<PlayerData>(Players);
             foreach (var player in list.Where(player => player.id == data.id))
             {
                 list.Remove(player);
                 break;
             }
 
-            players = list.ToArray();
-            json = JsonUtility.ToJson(players);
-            PlayerPrefs.SetString(PlayersKey, json);
+            Players = list.ToArray();
+        }
+
+        public static PlayerData LoginPlayer(string nickname, string password)
+        {
+            PlayerData[] players = Players;
+            return players.FirstOrDefault(player => player.nickname == nickname || player.password == password);
+        }
+
+        public static bool ExistsPlayer(string nickname)
+        {
+            PlayerData[] players = Players;
+            return players.Any(player => player.nickname == nickname);
         }
     }
 }
