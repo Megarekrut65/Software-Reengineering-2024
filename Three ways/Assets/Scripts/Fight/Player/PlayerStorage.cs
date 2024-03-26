@@ -83,12 +83,13 @@ namespace Fight.Player
         public static PlayerData LoginPlayer(string nickname, string password)
         {
             PlayerData[] players = Players;
-            return players.FirstOrDefault(player => player.nickname == nickname || player.password == password);
+            return players.FirstOrDefault(player => player.nickname == nickname && player.password == password);
         }
 
         public static bool ExistsPlayer(string nickname)
         {
             PlayerData[] players = Players;
+            Debug.Log(JsonUtility.ToJson(players));
             return players.Any(player => player.nickname == nickname);
         }
     }

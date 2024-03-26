@@ -64,6 +64,7 @@ namespace Registration
                 id = Guid.NewGuid().ToString(), password = password, 
                 weapons = new WeaponsData[] { new WeaponsData{indexOfAvatar = 0, lvlOfShield = 0, lvlOfSword = 0}}
             };
+            PlayerStorage.AddNewPlayer(playerData);
             PlayerStorage.SaveCurrentPlayer(playerData);
             SceneManager.LoadScene("Main", LoadSceneMode.Single);        
         }
