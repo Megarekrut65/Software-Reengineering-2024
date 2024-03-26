@@ -7,62 +7,46 @@ using UnityEngine.UI;
 
 public class SoundMode : MonoBehaviour
 {
-    private string soundPath = "sound.txt";
-    private bool soundActive;
+    private bool _soundActive;
     public Image soundOn;
     public Image soundOff;
     public Image sound;
-    void Start()
+
+    private void Start()
     {
-        CorrectPathes.MakeCorrect(ref soundPath);
-        soundActive = false;
+        _soundActive = false;
         ReadSound();
     }
-    void TurnOn()
+
+    private void TurnOn()
     {
         if(sound != null ) sound.sprite = soundOn.sprite;
-        soundActive = true;
+        _soundActive = true;
         AudioListener.pause = false;
     }
-    void TurnOff()
+
+    private void TurnOff()
     {
         if(sound != null ) sound.sprite = soundOff.sprite;
-        soundActive = false;
+        _soundActive = false;
         AudioListener.pause = true;
     }
-    void ReadSound()
+
+    private void ReadSound()
     {
-        FileStream file = new FileStream(soundPath, FileMode.OpenOrCreate);
-        StreamReader reader = new StreamReader(file);
-        if(reader.EndOfStream)
-        {
-            AudioListener.pause = false; 
-            soundActive = true;
-            reader.Close();
-            WriteSound();
-            return;
-        }
-        if (reader.ReadLine().Substring(5) == "true") 
-        {
-            TurnOn();
-        }
-        else 
-        {
-            TurnOff();
-        }
-        reader.Close();
+        bool play = Convert.ToBoolean(PlayerPrefs.GetString("sound", "true"));
+
+        if (play) TurnOn();
+        else TurnOff();
     }
-    void WriteSound()
+
+    private void WriteSound()
     {
-        FileStream file = new FileStream(soundPath, FileMode.OpenOrCreate);
-        StreamWriter writer = new StreamWriter(file);
-        if(soundActive) writer.WriteLine("Mode=true");
-        else writer.WriteLine("Mode=false");
-        writer.Close();
+        PlayerPrefs.SetString("sound", _soundActive.ToString());
     }
     public void EditSound()
     {
-        if(soundActive)
+        if(_soundActive)
         {
             TurnOff();
         }
