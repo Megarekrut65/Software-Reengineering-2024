@@ -48,12 +48,23 @@ namespace Fight.Player
             
             return true;
         }
+
+        private void UpdateWeaponData()
+        {
+            WeaponsData[] data = new WeaponsData[_weapons.Count];
+            int index = 0;
+            foreach (KeyValuePair<int, Weapons> weapon in _weapons)
+            {
+                data[index] = weapon.Value.Data;
+            }
+        }
         public bool BuyAvatar(int price, int index)
         {
             if (price >= Data.coins) return false;
         
             Data.coins -= price;
             _weapons[index] = new Weapons(new WeaponsData{indexOfAvatar = index});
+            UpdateWeaponData();
             return true;
         }
         public bool WasBought(int index)
