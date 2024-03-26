@@ -1,5 +1,6 @@
 ﻿using ExitGames.Client.Photon;
 using Fight.EventHandler;
+using Fight.WaitRoom;
 using Photon.Pun;
 using UnityEngine;
 

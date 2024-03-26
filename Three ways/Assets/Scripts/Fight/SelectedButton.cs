@@ -1,22 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Fight.EventHandler;
+﻿using Fight.EventHandler;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SelectedButton : MonoBehaviour, 
-IPointerDownHandler, IPointerUpHandler
+namespace Fight
 {
-    public Direction index;
-    public GameObject controler;
-    public void OnPointerDown(PointerEventData eventData)
-    {   
-        transform.localScale = 1.1f * transform.localScale;
-        controler.GetComponent<AudioSource>().Play();
-    }
-    public void OnPointerUp(PointerEventData eventData)
+    public class SelectedButton : MonoBehaviour, 
+        IPointerDownHandler, IPointerUpHandler
     {
-        transform.localScale = transform.localScale / 1.1f;
-        controler.GetComponent<SelectedWay>().Select(index);
+        public Direction index;
+        public GameObject controler;
+        public void OnPointerDown(PointerEventData eventData)
+        {   
+            transform.localScale = 1.1f * transform.localScale;
+            controler.GetComponent<AudioSource>().Play();
+        }
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            transform.localScale = transform.localScale / 1.1f;
+            controler.GetComponent<SelectedWay>().Select(index);
+        }
     }
 }

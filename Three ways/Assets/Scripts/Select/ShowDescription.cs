@@ -1,4 +1,5 @@
 ﻿using Fight;
+using Fight.Player;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

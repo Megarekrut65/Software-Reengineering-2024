@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class MyOpenURL : MonoBehaviour
+namespace Main
 {
-    public string url = "http://";
-    public void Open()
+    public class MyOpenURL : MonoBehaviour
     {
-        Application.OpenURL(url);
+        public string url = "http://";
+        public void Open()
+        {
+            Application.OpenURL(url);
+        }
     }
 }

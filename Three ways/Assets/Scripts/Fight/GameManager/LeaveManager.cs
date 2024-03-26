@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using Fight.WaitRoom;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

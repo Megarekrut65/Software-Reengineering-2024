@@ -1,18 +1,21 @@
 ﻿using Photon.Chat;
 using Photon.Realtime;
 
-public static class AppSettingsExtensions 
+namespace Photon.PhotonChat.Demos.DemoChat
 {
-    public static ChatAppSettings GetChatSettings(this AppSettings appSettings)
+    public static class AppSettingsExtensions 
     {
-        return new ChatAppSettings
+        public static ChatAppSettings GetChatSettings(this AppSettings appSettings)
         {
-            AppId = appSettings.AppIdChat,
-            AppVersion = appSettings.AppVersion,
-            FixedRegion = appSettings.IsBestRegion ? null : appSettings.FixedRegion,
-            NetworkLogging = appSettings.NetworkLogging,
-            Protocol = appSettings.Protocol,
-            Server = appSettings.IsDefaultNameServer ? null : appSettings.Server
-        };
+            return new ChatAppSettings
+            {
+                AppId = appSettings.AppIdChat,
+                AppVersion = appSettings.AppVersion,
+                FixedRegion = appSettings.IsBestRegion ? null : appSettings.FixedRegion,
+                NetworkLogging = appSettings.NetworkLogging,
+                Protocol = appSettings.Protocol,
+                Server = appSettings.IsDefaultNameServer ? null : appSettings.Server
+            };
+        }
     }
 }

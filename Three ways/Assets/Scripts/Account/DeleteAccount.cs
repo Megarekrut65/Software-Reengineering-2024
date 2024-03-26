@@ -1,27 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Account;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class DeleteAccount : MonoBehaviour
+namespace Account
 {
-    public GameObject mainCamera;
-    public InputField password;
-    public GameObject error;
-
-    public void Delete()
+    public class DeleteAccount : MonoBehaviour
     {
-        if(mainCamera.GetComponent<SetPlayerData>().Player.CorrectPassword(password.text))
+        public GameObject mainCamera;
+        public InputField password;
+        public GameObject error;
+
+        public void Delete()
         {
-            mainCamera.GetComponent<SetPlayerData>().DeleteAccount();
+            if(mainCamera.GetComponent<SetPlayerData>().Player.CorrectPassword(password.text))
+            {
+                mainCamera.GetComponent<SetPlayerData>().DeleteAccount();
+            }
+            else
+            {
+                error.SetActive(true);
+                error.GetComponent<ErrorMessage>().SetError("Invalid password entered!");
+                gameObject.SetActive(false);
+            }
+            password.text = "";
         }
-        else
-        {
-            error.SetActive(true);
-            error.GetComponent<ErrorMessage>().SetError("Invalid password entered!");
-            gameObject.SetActive(false);
-        }
-        password.text = "";
     }
 }

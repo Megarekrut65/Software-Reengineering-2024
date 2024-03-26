@@ -1,11 +1,14 @@
 ﻿using System;
-using System.IO;
-public class MyChance
+
+namespace Fight
 {
-    public static bool ThereIs(int percentage)
+    public class MyChance
     {
-        Random random = new Random();
-        int chance = random.Next(1, 101);
-        return (chance <= percentage);
+        public static bool ThereIs(int percentage)
+        {
+            Random random = new Random();
+            int chance = random.Next(1, 101);
+            return (chance <= percentage);
+        }
     }
 }

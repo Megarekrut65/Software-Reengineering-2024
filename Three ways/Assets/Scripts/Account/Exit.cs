@@ -1,19 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Fight.Player;
+﻿using Fight.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Exit : MonoBehaviour
+namespace Account
 {
-    public void ExitButton()
+    public class Exit : MonoBehaviour
     {
-        PlayerData data = PlayerStorage.GetCurrentPlayer();
-        if (data != null)
+        public void ExitButton()
         {
-            PlayerStorage.DeletePlayer(data);
-        }
+            PlayerStorage.ClearCurrent();
         
-        SceneManager.LoadScene("LogIn", LoadSceneMode.Single);
+            SceneManager.LoadScene("LogIn", LoadSceneMode.Single);
+        }
     }
 }

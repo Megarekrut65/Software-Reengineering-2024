@@ -1,57 +1,57 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Account;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class EditPassword : MonoBehaviour
+namespace Account
 {
-    public GameObject mainCamera;
-    public GameObject errors;
-    public InputField password;
-    public InputField newPassword;
-    public InputField newPasswordAgain;
-
-    void EditPass()
+    public class EditPassword : MonoBehaviour
     {
-        if(mainCamera.GetComponent<SetPlayerData>().Player.EditPassword(password.text, newPassword.text))
+        public GameObject mainCamera;
+        public GameObject errors;
+        public InputField password;
+        public InputField newPassword;
+        public InputField newPasswordAgain;
+
+        void EditPass()
         {
-            mainCamera.GetComponent<SetPlayerData>().EditPlayer();
+            if(mainCamera.GetComponent<SetPlayerData>().Player.EditPassword(password.text, newPassword.text))
+            {
+                mainCamera.GetComponent<SetPlayerData>().EditPlayer();
+                Clear();
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                SetErrors("Invalid password entered!");
+            }
+        }
+        void Clear()
+        {
+            password.text = "";
+            newPassword.text = "";
+            newPasswordAgain.text = "";
+        }
+        void SetErrors(string message)
+        {
             Clear();
+            errors.SetActive(true);
+            errors.GetComponent<ErrorMessage>().SetError(message);
             gameObject.SetActive(false);
         }
-        else
+        public void Edit()
         {
-            SetErrors("Invalid password entered!");
+            if(newPassword.text.Length <= 3)
+            {
+                SetErrors("The new password is too short!");
+                return;
+            }
+            if(newPassword.text == newPasswordAgain.text)
+            {
+                EditPass();
+            }
+            else
+            {
+                SetErrors("New passwords are not equal!");
+            }  
         }
-    }
-    void Clear()
-    {
-        password.text = "";
-        newPassword.text = "";
-        newPasswordAgain.text = "";
-    }
-    void SetErrors(string message)
-    {
-        Clear();
-        errors.SetActive(true);
-        errors.GetComponent<ErrorMessage>().SetError(message);
-        gameObject.SetActive(false);
-    }
-    public void Edit()
-    {
-        if(newPassword.text.Length <= 3)
-        {
-            SetErrors("The new password is too short!");
-            return;
-        }
-        if(newPassword.text == newPasswordAgain.text)
-        {
-            EditPass();
-        }
-        else
-        {
-            SetErrors("New passwords are not equal!");
-        }  
     }
 }

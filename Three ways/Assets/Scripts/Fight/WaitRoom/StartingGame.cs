@@ -1,26 +1,27 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using Fight.GameManager;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StartingGame : MonoBehaviour
+namespace Fight.WaitRoom
 {
-    public GameObject gameManager;
-    public Text count;
-    public void Game()
+    public class StartingGame : MonoBehaviour
     {
-        StartCoroutine("Count");
-    }
-    IEnumerator Count()
-    {
-        for(int i = 3; i >= 0; i--)
+        public GameObject gameManager;
+        public Text count;
+        public void Game()
         {
-            count.text = i.ToString();
-            yield return new WaitForSeconds(1f);
+            StartCoroutine("Count");
         }
-        gameManager.GetComponent<GameManager>().StartGame();
-        gameObject.SetActive(false); 
-        StopCoroutine("Count");
+        IEnumerator Count()
+        {
+            for(int i = 3; i >= 0; i--)
+            {
+                count.text = i.ToString();
+                yield return new WaitForSeconds(1f);
+            }
+            gameManager.GetComponent<GameManager.GameManager>().StartGame();
+            gameObject.SetActive(false); 
+            StopCoroutine("Count");
+        }
     }
 }

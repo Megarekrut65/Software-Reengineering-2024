@@ -1,4 +1,5 @@
-﻿using Fight.Player;
+﻿using Fight;
+using Fight.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;

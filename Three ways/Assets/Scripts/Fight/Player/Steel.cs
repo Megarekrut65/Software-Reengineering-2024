@@ -1,4 +1,4 @@
-﻿namespace Fight
+﻿namespace Fight.Player
 {
     public enum Steel
     {
