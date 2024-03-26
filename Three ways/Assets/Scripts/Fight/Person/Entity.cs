@@ -19,7 +19,7 @@ namespace Fight.Person
 
         public void SetMinePlayer(GameObject gameObject)
         {
-            handler = GameObject.Find("MainCamera").GetComponent<EventHandler.EventHandler>();
+            handler = GameObject.Find("Main Camera").GetComponent<EventHandler.EventHandler>();
             minePosition = new Vector3(-5.5f, -5f, 0f);
             enemyPosition = new Vector3(4f, -5f, 0f); 
             gameObject.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);

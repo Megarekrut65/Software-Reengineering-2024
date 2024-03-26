@@ -5,6 +5,7 @@ namespace Fight.WaitRoom
 {
     public class SyncPlayersInfo : MonoBehaviour, IPunObservable
     {
+        [SerializeField]
         private GameInfo _gameInfo;
         private GameObject _board;
         private GameObject _mainCamera;
@@ -15,7 +16,6 @@ namespace Fight.WaitRoom
             _board = GameObject.Find("LeftBoard");
             string json = PlayerPrefs.GetString("game-info", "{}");
             _gameInfo = JsonUtility.FromJson<GameInfo>(json);
-            Debug.Log(json);
         }
 
         private void SetOther()
@@ -27,6 +27,7 @@ namespace Fight.WaitRoom
         {
             _mainCamera = GameObject.Find("Main Camera");
             _photonView = GetComponent<PhotonView>();
+            _photonView.Synchronization = ViewSynchronization.ReliableDeltaCompressed;
             if(_photonView.IsMine) SetMine();
             else SetOther();
         }
@@ -39,6 +40,8 @@ namespace Fight.WaitRoom
             else
             {
                 _gameInfo = (GameInfo)stream.ReceiveNext();
+                Debug.Log("Receive");
+                Debug.Log(_gameInfo.isReady);
             }
         }
 
@@ -57,6 +60,7 @@ namespace Fight.WaitRoom
                 _board.GetComponent<InfoBoard>().info.isReady = _gameInfo.isReady;
                 _mainCamera.GetComponent<EventHandler.EventHandler>().left.points = _gameInfo.points;
             }
+            
         }
     }
 }
