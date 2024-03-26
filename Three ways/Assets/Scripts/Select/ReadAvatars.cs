@@ -75,7 +75,7 @@ namespace Select
         private void SetCurrentAvatar()
         {
             objects[currentIndex].SetActive(true);
-            objects[currentIndex].GetComponent<Avatar>().SetSet();
+            objects[currentIndex].GetComponent<Animator>().SetBool("idle", false);
         }
 
         private void SetAll()
