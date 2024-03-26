@@ -1,18 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Fight.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class CheckingAccount : MonoBehaviour
+namespace Main
 {
-    private PlayerInfo player;
-
-    private string infoPath = "player-info.txt";
-
-    void Start()
+    public class CheckingAccount : MonoBehaviour
     {
-        CorrectPathes.MakeCorrect(ref infoPath);
-        player = new PlayerInfo(infoPath);
-        if(!player.correctRead) SceneManager.LoadScene("LogIn", LoadSceneMode.Single);
+        void Start()
+        {
+            PlayerData player = PlayerStorage.GetCurrentPlayer();
+            if(player == null) SceneManager.LoadScene("LogIn", LoadSceneMode.Single);
+        }
     }
 }

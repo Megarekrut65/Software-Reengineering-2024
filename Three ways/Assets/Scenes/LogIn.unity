@@ -684,7 +684,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 421596904}
         m_TargetAssemblyTypeName: LogInAccount, Assembly-CSharp
-        m_MethodName: OKButton
+        m_MethodName: OkButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
