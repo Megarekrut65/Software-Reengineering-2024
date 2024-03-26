@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -10,13 +11,13 @@ namespace Fight.Player
 
         private static PlayerData[] Players {
             get {
-                string json = PlayerPrefs.GetString(PlayersKey, "[]");
-                PlayerData[] players = JsonUtility.FromJson<PlayerData[]>(json);
-                return players;
+                string json = PlayerPrefs.GetString(PlayersKey, "");
+                Wrapper wrapper = JsonUtility.FromJson<Wrapper>(json);
+                return wrapper?.players ?? Array.Empty<PlayerData>();
             }
             set
             {
-                string json = JsonUtility.ToJson(value);
+                string json = JsonUtility.ToJson(new Wrapper{players = value});
                 PlayerPrefs.SetString(PlayersKey, json);
             }
         }

@@ -21,7 +21,7 @@ public class RegAccount : MonoBehaviour
     {
         if (!PlayerStorage.ExistsPlayer(nickname)) return false;
         
-        IncorrectData("Player exists","Player with entered nickname already exists!");
+        IncorrectData("Player","with entered nickname already exists!");
         return true;
     }
     

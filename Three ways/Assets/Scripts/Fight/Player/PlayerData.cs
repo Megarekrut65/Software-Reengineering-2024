@@ -15,4 +15,10 @@ namespace Fight.Player
         public int points;
         public WeaponsData[] weapons;
     }
+
+    [Serializable]
+    public class Wrapper
+    {
+        public PlayerData[] players;
+    }
 }

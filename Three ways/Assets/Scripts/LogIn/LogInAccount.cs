@@ -73,7 +73,7 @@ public class LogInAccount : MonoBehaviour
             return;  
         }
 
-        IncorrectData("Incorrect", "Nickname or password incorrect!");
+        IncorrectData("Nickname or password", "are incorrect!");
     }
 }
 
