@@ -1,23 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Fight;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ShowDescription : MonoBehaviour, 
-IPointerDownHandler, IPointerUpHandler
+namespace Select
 {
-    public int index;
-    public GameObject board;
-
-    public void OnPointerDown(PointerEventData eventData)
-    {   
-        GetComponent<AudioSource>().Play();
-        transform.localScale = 1.1f * transform.localScale;
-    }
-    public void OnPointerUp(PointerEventData eventData)
+    public class ShowDescription : MonoBehaviour, 
+        IPointerDownHandler, IPointerUpHandler
     {
-        transform.localScale = transform.localScale / 1.1f;
-        board.SetActive(true);
-        board.GetComponent<DescriptionBoard>().SetData(index);
+        public Steel index;
+        public GameObject board;
+
+        public void OnPointerDown(PointerEventData eventData)
+        {   
+            GetComponent<AudioSource>().Play();
+            transform.localScale = 1.1f * transform.localScale;
+        }
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            transform.localScale /= 1.1f;
+            board.SetActive(true);
+            board.GetComponent<DescriptionBoard>().SetData(index);
+        }
     }
 }
