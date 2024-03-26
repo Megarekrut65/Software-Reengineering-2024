@@ -10,9 +10,6 @@ namespace Account
         public Text nickName;
         public Text points;
         public Text coins;
-        private string _infoPath = "player-info.txt";
-        private string _dataPath = "data.txt";
-        private string _newDataPath = "newData.txt";
         public PlayerController Player;
         public GameObject deleting;
         public GameObject editing;
@@ -20,7 +17,6 @@ namespace Account
         
         private void Start()
         {
-            CorrectPathes.MakeCorrect(ref _infoPath, ref _dataPath, ref _newDataPath);
             PlayerData data = PlayerStorage.GetCurrentPlayer();
             if (data == null)
             {

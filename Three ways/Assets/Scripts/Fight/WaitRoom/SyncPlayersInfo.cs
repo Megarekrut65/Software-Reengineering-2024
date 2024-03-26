@@ -10,19 +10,20 @@ public class SyncPlayersInfo : MonoBehaviour, IPunObservable
     private GameObject board;
     private GameObject mainCamera;
     private PhotonView photonView;
-    private string path = "game-info.txt";
-    
-    void SetMine()
+
+    private void SetMine()
     {
         board = GameObject.Find("LeftBoard");
-        CorrectPathes.MakeCorrect(ref path);
-        gameInfo = new GameInfo(path);
+        string json = PlayerPrefs.GetString("game-info", "{}");
+        gameInfo = JsonUtility.FromJson<GameInfo>(json);
     }
-    void SetOther()
+
+    private void SetOther()
     {
         board = GameObject.Find("RightBoard");
     }
-    void Start()
+
+    private void Start()
     {
         mainCamera = GameObject.Find("Main Camera");
         photonView = GetComponent<PhotonView>();
@@ -40,7 +41,8 @@ public class SyncPlayersInfo : MonoBehaviour, IPunObservable
             gameInfo = (GameInfo)stream.ReceiveNext();
         }
     }
-    void Update()
+
+    private void Update()
     {
         if(gameInfo.isHost) mainCamera.GetComponent<EventHandler>().maxHp = gameInfo.maxHP; 
         if(gameInfo.isHost) board.GetComponent<InfoBoard>().SetRoom(gameInfo.code);
