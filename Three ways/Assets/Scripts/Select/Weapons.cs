@@ -7,9 +7,9 @@ namespace Select
     [Serializable]
     public class WeaponsData
     {
-        public int indexOfAvatar;
-        public int lvlOfSword;
-        public int lvlOfShield;
+        public int indexOfAvatar = 0;
+        public int lvlOfSword = 1;
+        public int lvlOfShield = 1;
     }
 
     public class Weapons

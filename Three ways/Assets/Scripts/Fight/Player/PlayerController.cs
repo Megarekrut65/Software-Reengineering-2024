@@ -37,6 +37,7 @@ namespace Fight.Player
         {
             Data.points += result.newPoints;
             Data.coins += result.coins;
+            PlayerStorage.SaveCurrentPlayer(Data);
         }
         public bool UpgradeWeapon(int price, int indexOfAvatar, Steel steel)
         {
@@ -45,6 +46,7 @@ namespace Fight.Player
 
             if (!_weapons.TryGetValue(indexOfAvatar, out Weapons weapons)) return false;
             weapons.AddLvl(steel);
+            PlayerStorage.SaveCurrentPlayer(Data);
             
             return true;
         }
@@ -57,6 +59,8 @@ namespace Fight.Player
             {
                 data[index] = weapon.Value.Data;
             }
+
+            Data.weapons = data;
         }
         public bool BuyAvatar(int price, int index)
         {
@@ -65,6 +69,7 @@ namespace Fight.Player
             Data.coins -= price;
             _weapons[index] = new Weapons(new WeaponsData{indexOfAvatar = index});
             UpdateWeaponData();
+            PlayerStorage.SaveCurrentPlayer(Data);
             return true;
         }
         public bool WasBought(int index)
@@ -74,13 +79,6 @@ namespace Fight.Player
         public bool CorrectPassword(string password)
         {
             return Data.password == password;
-        }
-        public bool EditPassword(string oldPassword, string newPassword)
-        {
-            if (!CorrectPassword(oldPassword)) return false;
-        
-            Data.password = newPassword;
-            return true;
         }
     }
 }

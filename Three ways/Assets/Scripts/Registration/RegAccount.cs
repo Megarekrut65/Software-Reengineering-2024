@@ -62,7 +62,7 @@ namespace Registration
             {
                 nickname = nickname, eMail = eMail, coins = 10000, points = 100,
                 id = Guid.NewGuid().ToString(), password = password, 
-                weapons = new WeaponsData[] { new WeaponsData{indexOfAvatar = 0, lvlOfShield = 0, lvlOfSword = 0}}
+                weapons = new WeaponsData[] { new WeaponsData()}
             };
             PlayerStorage.AddNewPlayer(playerData);
             PlayerStorage.SaveCurrentPlayer(playerData);

@@ -44,14 +44,13 @@ namespace Fight.GameManager
 
         private void Update()
         {
-            if(!_isStarted&&leftBoard.GetComponent<InfoBoard>().info.isReady &&
-               rightBoard.GetComponent<InfoBoard>().info.isReady)
-            {
-                _isStarted = true;
-                startingGame.SetActive(true);
-                waitRoom.SetActive(false);
-                startingGame.GetComponent<StartingGame>().Game();
-            }
+            if (_isStarted || !leftBoard.GetComponent<InfoBoard>().info.isReady ||
+                !rightBoard.GetComponent<InfoBoard>().info.isReady) return;
+            
+            _isStarted = true;
+            startingGame.SetActive(true);
+            waitRoom.SetActive(false);
+            startingGame.GetComponent<StartingGame>().Game();
         }
         public void StartGame()
         {

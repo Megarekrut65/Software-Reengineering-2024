@@ -5,56 +5,57 @@ namespace Fight.WaitRoom
 {
     public class SyncPlayersInfo : MonoBehaviour, IPunObservable
     {
-        private GameInfo gameInfo;
-        private GameObject board;
-        private GameObject mainCamera;
-        private PhotonView photonView;
+        private GameInfo _gameInfo;
+        private GameObject _board;
+        private GameObject _mainCamera;
+        private PhotonView _photonView;
 
         private void SetMine()
         {
-            board = GameObject.Find("LeftBoard");
+            _board = GameObject.Find("LeftBoard");
             string json = PlayerPrefs.GetString("game-info", "{}");
-            gameInfo = JsonUtility.FromJson<GameInfo>(json);
+            _gameInfo = JsonUtility.FromJson<GameInfo>(json);
+            Debug.Log(json);
         }
 
         private void SetOther()
         {
-            board = GameObject.Find("RightBoard");
+            _board = GameObject.Find("RightBoard");
         }
 
         private void Start()
         {
-            mainCamera = GameObject.Find("Main Camera");
-            photonView = GetComponent<PhotonView>();
-            if(photonView.IsMine) SetMine();
+            _mainCamera = GameObject.Find("Main Camera");
+            _photonView = GetComponent<PhotonView>();
+            if(_photonView.IsMine) SetMine();
             else SetOther();
         }
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if(stream.IsWriting)
             {
-                stream.SendNext(gameInfo);
+                stream.SendNext(_gameInfo);
             }
             else
             {
-                gameInfo = (GameInfo)stream.ReceiveNext();
+                _gameInfo = (GameInfo)stream.ReceiveNext();
             }
         }
 
         private void Update()
         {
-            if(gameInfo.isHost) mainCamera.GetComponent<EventHandler.EventHandler>().maxHp = gameInfo.maxHP; 
-            if(gameInfo.isHost) board.GetComponent<InfoBoard>().SetRoom(gameInfo.code);
-            board.GetComponent<InfoBoard>().SetData(photonView.Owner.NickName, gameInfo);
-            if(photonView.IsMine)
+            if(_gameInfo.isHost) _mainCamera.GetComponent<EventHandler.EventHandler>().maxHp = _gameInfo.maxHP; 
+            if(_gameInfo.isHost) _board.GetComponent<InfoBoard>().SetRoom(_gameInfo.code);
+            _board.GetComponent<InfoBoard>().SetData(_photonView.Owner.NickName, _gameInfo);
+            if(_photonView.IsMine)
             {
-                gameInfo.isReady = board.GetComponent<InfoBoard>().info.isReady;
-                mainCamera.GetComponent<EventHandler.EventHandler>().right.points = gameInfo.points;
+                _gameInfo.isReady = _board.GetComponent<InfoBoard>().info.isReady;
+                _mainCamera.GetComponent<EventHandler.EventHandler>().right.points = _gameInfo.points;
             }
             else
             {
-                board.GetComponent<InfoBoard>().info.isReady = gameInfo.isReady;
-                mainCamera.GetComponent<EventHandler.EventHandler>().left.points = gameInfo.points;
+                _board.GetComponent<InfoBoard>().info.isReady = _gameInfo.isReady;
+                _mainCamera.GetComponent<EventHandler.EventHandler>().left.points = _gameInfo.points;
             }
         }
     }

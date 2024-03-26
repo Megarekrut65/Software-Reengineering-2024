@@ -5,21 +5,20 @@ using Fight.WaitRoom;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Lobby
 {
     public class LobbyManager : MonoBehaviourPunCallbacks
     {
-        private string roomPath = "room-info.txt";
         public Text roomCodeText;
-        public InputField maxHP;
+        public InputField maxHp;
         public InputField roomCode;
-        private PlayerController player;
-        public string gamePath = "game-info.txt";
-        private int numberOfRoom;
-        private bool isConnect;
-        private bool needConnect;
+        private PlayerController _player;
+        private int _numberOfRoom;
+        private bool _isConnect;
+        private bool _needConnect;
         public GameObject waiting;
         public Text waitingText;
         public GameObject errorsBoard;
@@ -27,29 +26,31 @@ namespace Lobby
         public GameObject joining;
         public GameObject lobbyMenu;
         public Toggle isPrivate;
-        private bool findRandom;
+        private bool _findRandom;
 
-        void Start()
+        private void Start()
         {       
             SetDisconnect();
             PlayerSetting();
             SettingPhoton();
-            findRandom = false;
-            StartCoroutine("FindRoom");
+            _findRandom = false;
+            StartCoroutine(FindRoom());
         }
-        void PlayerSetting()
+
+        private void PlayerSetting()
         {
-            player = new PlayerController(PlayerStorage.GetCurrentPlayer());
+            _player = new PlayerController(PlayerStorage.GetCurrentPlayer());
         }
         public void SetDisconnect()
         {
             PhotonNetwork.Disconnect();
-            isConnect = false;
-            needConnect = true;
+            _isConnect = false;
+            _needConnect = true;
         }
-        void SettingPhoton()
+
+        private void SettingPhoton()
         {
-            PhotonNetwork.NickName = player.Data.nickname;
+            PhotonNetwork.NickName = _player.Data.nickname;
             //PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.GameVersion = "2";
         }
@@ -59,41 +60,44 @@ namespace Lobby
         }
         public override void OnConnectedToMaster()
         {
-            isConnect = true;
-            numberOfRoom = UnityEngine.Random.Range(1000,9999);
-            roomCodeText.text = "Room code: " + numberOfRoom.ToString();
+            _isConnect = true;
+            _numberOfRoom = UnityEngine.Random.Range(1000,9999);
+            roomCodeText.text = "Room code: " + _numberOfRoom.ToString();
             SetWaiting("", false);
             Debug.Log("Connected to Master");   
         }
-        bool CreateGameInfo(int code, bool isHost)
+
+        private bool CreateGameInfo(int code, bool isHost)
         {
-            int maxHPNumber = Convert.ToInt32(maxHP.text);
-            if(maxHPNumber < 1)
+            int maxHpNumber = Convert.ToInt32(maxHp.text);
+            if(maxHpNumber < 1)
             {
                 errorsBoard.SetActive(true);
                 errorsBoard.GetComponent<Errors>().SetError("Error" + ": Max hp can't be less than one");
                 return false;
             }
-            GameInfo gameInfo = new GameInfo(player.CurrentIndexOfAvatar, player.Data.points, code, maxHPNumber, isHost);
-            gameInfo.CreateInfoFile(gamePath); 
+            GameInfo gameInfo = new GameInfo(_player.CurrentIndexOfAvatar, _player.Data.points, code, maxHpNumber, isHost);
+            PlayerPrefs.SetString("game-info", JsonUtility.ToJson(gameInfo));
 
             return true;
         }
         public void CreateRoom()
         {
-            if(!isConnect) return;
+            if(!_isConnect) return;
             SetWaiting("Creating...", true);
-            if(!CreateGameInfo(numberOfRoom, true)) return;
+            if(!CreateGameInfo(_numberOfRoom, true)) return;
             Debug.Log("Creating...");  
-            PhotonNetwork.CreateRoom(numberOfRoom.ToString(), new Photon.Realtime.RoomOptions{MaxPlayers = 2, IsVisible = !isPrivate.isOn});
+            PhotonNetwork.CreateRoom(_numberOfRoom.ToString(), new Photon.Realtime.RoomOptions{MaxPlayers = 2, IsVisible = !isPrivate.isOn});
         }
-        IEnumerator CloseWait()
+
+        private IEnumerator CloseWait()
         {
             yield return new WaitForSeconds(2f);
             waiting.SetActive(false);
             StopCoroutine("CloseWait");
         }
-        void SetWaiting(string text, bool active)
+
+        private void SetWaiting(string text, bool active)
         {
             if(active)
             {
@@ -105,11 +109,12 @@ namespace Lobby
                 StartCoroutine("CloseWait");
             }
         }
-        IEnumerator FindRoom()
+
+        private IEnumerator FindRoom()
         {
             while(true)
             {
-                if(isConnect&&findRandom) 
+                if(_isConnect&&_findRandom) 
                 {
                     PhotonNetwork.JoinRandomRoom();    
                 }  
@@ -118,12 +123,12 @@ namespace Lobby
         }
         public void OnRandomRoom()
         {
-            if(!isConnect) return;
+            if(!_isConnect) return;
             SetWaiting("Finding random room...", true);
             Debug.Log("Finding...");
-            maxHP.text = "20";
+            maxHp.text = "20";
             CreateGameInfo(1111, false);
-            findRandom = true;   
+            _findRandom = true;   
         }
         public override void OnCreatedRoom()
         {
@@ -138,20 +143,20 @@ namespace Lobby
         }
         public void JoinToRoom()
         {
-            if(!isConnect) return;
+            if(!_isConnect) return;
             SetWaiting("Joining...", true);
             Debug.Log("Joining...");
             if(roomCode.text.Length == 0) OnJoinRoomFailed(32758, " Room code is too short");
             else 
             {
-                maxHP.text = "20";
+                maxHp.text = "20";
                 CreateGameInfo(Convert.ToInt32(roomCode.text), false);
                 PhotonNetwork.JoinRoom(roomCode.text);
             }
         }
         public override void OnJoinedRoom()
         {
-            findRandom = false;
+            _findRandom = false;
             SetWaiting("", false);
             Debug.Log("Joined the room");
             PhotonNetwork.LoadLevel("Fight"); 
@@ -168,17 +173,18 @@ namespace Lobby
         }
         public override void OnDisconnected(DisconnectCause cause)
         {
-            isConnect = false;
-            needConnect = true;
+            _isConnect = false;
+            _needConnect = true;
             Debug.Log("Disconnected from Master: " + cause.ToString());
             if(roomCodeText != null) roomCodeText.text = "Room code: XXXX";
         }
-        void Update()
+
+        private void Update()
         {
-            if(needConnect && !isConnect) 
+            if(_needConnect && !_isConnect) 
             {
                 SetWaiting("Connecting...", true);
-                needConnect = false;
+                _needConnect = false;
                 PhotonNetwork.ConnectUsingSettings();
             }
         }
@@ -186,7 +192,7 @@ namespace Lobby
         {
             lobbyMenu.SetActive(false);
             creating.SetActive(true);
-            maxHP.text = "20";
+            maxHp.text = "20";
         }
         public void Joining()
         {

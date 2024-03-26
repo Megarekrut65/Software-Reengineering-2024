@@ -12,12 +12,10 @@ namespace Fight.Person
         private Entity entity;
         [SerializeField]
         private Animator animator;
-        [SerializeField]
-        private Vector2 startPosition;
-        [SerializeField]
-        private Vector2 endPosition;
-        [SerializeField]
-    
+        
+        private Vector2 _startPosition;
+        private Vector2 _endPosition;
+
         public int index = 0;
         public bool isStunned = false;
     
@@ -43,8 +41,8 @@ namespace Fight.Person
         }
         public void Hitting()
         {
-            startPosition = entity.minePosition;
-            endPosition = entity.enemyPosition;
+            _startPosition = entity.minePosition;
+            _endPosition = entity.enemyPosition;
             _progress = 0;
             _isRun = true;
             animator.SetBool("run", _isRun );
@@ -159,8 +157,8 @@ namespace Fight.Person
             animator.SetBool("run", false );
             animator.SetInteger("hit", 0);
             _wasHit = true;
-            startPosition = entity.enemyPosition;
-            endPosition = entity.minePosition;
+            _startPosition = entity.enemyPosition;
+            _endPosition = entity.minePosition;
             _progress = 0;
             _isRun = true;
         }
@@ -176,9 +174,9 @@ namespace Fight.Person
         private void FixedUpdate()
         {
             if(!_isRun) return;
-            transform.position = Vector2.Lerp(startPosition, endPosition, _progress);
+            transform.position = Vector2.Lerp(_startPosition, _endPosition, _progress);
             _progress += entity.step;
-            if (!(Math.Abs(transform.position.x - endPosition.x) < 0.01)) return;
+            if (!(Math.Abs(transform.position.x - _endPosition.x) < 0.01)) return;
         
             _isRun = false;
             if(!_wasHit)

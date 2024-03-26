@@ -10,9 +10,10 @@ namespace Fight.WaitRoom
         public Text count;
         public void Game()
         {
-            StartCoroutine("Count");
+            StartCoroutine(Count());
         }
-        IEnumerator Count()
+
+        private IEnumerator Count()
         {
             for(int i = 3; i >= 0; i--)
             {
@@ -21,7 +22,7 @@ namespace Fight.WaitRoom
             }
             gameManager.GetComponent<GameManager.GameManager>().StartGame();
             gameObject.SetActive(false); 
-            StopCoroutine("Count");
+            StopCoroutine(Count());
         }
     }
 }
